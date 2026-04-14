@@ -4,13 +4,11 @@ app = Flask(__name__)
 app.secret_key = "secretkey"
 
 
-# HOME
 @app.route('/')
 def home():
     return render_template("index.html")
 
 
-# LOGIN
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -33,14 +31,12 @@ def login():
     return render_template("login.html")
 
 
-# LOGOUT
 @app.route('/logout')
 def logout():
     session.clear()
     return redirect('/login')
 
 
-# USER DASHBOARD
 @app.route('/user/dashboard')
 def user_dashboard():
     if 'user' not in session:
@@ -52,7 +48,6 @@ def user_dashboard():
     return render_template("user/dashboard.html")
 
 
-# ADMIN DASHBOARD
 @app.route('/admin/dashboard')
 def admin_dashboard():
     if 'user' not in session:
