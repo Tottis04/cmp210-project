@@ -1,6 +1,360 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard — Crocodile Analytics</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg:      #1c1f28;
+            --nav-bg:  #191c23;
+            --surface: #242830;
+            --border:  #2e3340;
+            --accent:  #4a7cf7;
+            --text:    #d0d5df;
+            --muted:   #6b7280;
+        }
 
-{% block content %}
-<h2>Admin Dashboard</h2>
-<p>Welcome admin!</p>
-{% endblock %}
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+            padding-top: 54px; /* clear fixed navbar */
+        }
+
+        /* ── Top navbar ── */
+        .top-nav {
+            background: var(--nav-bg) !important;
+            border-bottom: 1px solid var(--border);
+            min-height: 54px;
+            padding: 0 20px;
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+        }
+
+        .top-nav .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 0;
+            margin-right: 24px;
+            text-decoration: none;
+        }
+
+        .logo-mark {
+            width: 30px; height: 30px;
+            background: var(--accent);
+            border-radius: 6px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 12px; color: #fff;
+            flex-shrink: 0;
+        }
+
+        .brand-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #e2e6ef;
+        }
+
+        /* Nav links */
+        .top-nav .nav-link {
+            color: #7d8699 !important;
+            font-size: 13px;
+            padding: 6px 10px !important;
+            border-radius: 5px;
+            transition: color .12s, background .12s;
+            white-space: nowrap;
+        }
+
+        .top-nav .nav-link:hover {
+            color: var(--text) !important;
+            background: rgba(255,255,255,.04);
+        }
+
+        .top-nav .nav-link.active {
+            color: #c6d4ff !important;
+            background: rgba(74,124,247,.10);
+        }
+
+        /* Logout button */
+        .btn-nav-logout {
+            font-size: 13px;
+            font-family: inherit;
+            color: var(--muted);
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 5px 13px;
+            text-decoration: none;
+            white-space: nowrap;
+            transition: color .12s, border-color .12s;
+        }
+
+        .btn-nav-logout:hover {
+            color: #e57368;
+            border-color: rgba(192,57,43,.4);
+            text-decoration: none;
+        }
+
+        /* Bootstrap toggler on dark bg */
+        .navbar-toggler {
+            border-color: var(--border) !important;
+            padding: 4px 9px;
+        }
+
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+        }
+
+        /* Mobile: collapsed nav items */
+        @media (max-width: 767px) {
+            .top-nav .navbar-collapse {
+                background: var(--nav-bg);
+                border-top: 1px solid var(--border);
+                padding: 8px 0 12px;
+                margin: 0 -20px;
+                padding-left: 20px;
+            }
+
+            .top-nav .nav-link { border-radius: 0; }
+
+            .btn-nav-logout {
+                margin: 8px 0 0 0;
+                display: inline-block;
+            }
+        }
+
+        /* ── Page content ── */
+        .page-wrap {
+            max-width: 1160px;
+            margin: 0 auto;
+            padding: 32px 24px 56px;
+        }
+
+        /* Page header */
+        .page-header { margin-bottom: 24px; }
+
+        .page-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #e2e6ef;
+            margin-bottom: 3px;
+        }
+
+        .page-sub { font-size: 13px; color: var(--muted); }
+
+        /* ── Stat cards ── */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 18px 20px;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .6px;
+            color: var(--muted);
+            margin-bottom: 10px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #e2e6ef;
+            line-height: 1;
+        }
+
+        .stat-hint {
+            font-size: 11px;
+            color: #4a5265;
+            margin-top: 5px;
+        }
+
+        /* ── Section heading ── */
+        .section-head { margin-bottom: 14px; }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #e2e6ef;
+        }
+
+        .section-sub {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 2px;
+        }
+
+        /* ── Action cards ── */
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+        }
+
+        .action-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px 20px 18px;
+            display: flex;
+            flex-direction: column;
+            transition: border-color .15s, background .15s;
+        }
+
+        .action-card:hover {
+            border-color: #3d4455;
+            background: #272b34;
+        }
+
+        .action-icon-box {
+            width: 36px; height: 36px;
+            border-radius: 7px;
+            background: rgba(74,124,247,.08);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 17px;
+            margin-bottom: 12px;
+        }
+
+        .action-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #e2e6ef;
+            margin-bottom: 5px;
+        }
+
+        .action-desc {
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.5;
+            flex: 1;
+        }
+
+        .action-link {
+            display: inline-block;
+            margin-top: 14px;
+            padding: 7px 14px;
+            background: var(--accent);
+            color: #fff;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            text-decoration: none;
+            align-self: flex-start;
+            transition: background .15s;
+        }
+
+        .action-link:hover {
+            background: #3a6ce0;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 900px) {
+            .action-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 576px) {
+            .stats-row   { grid-template-columns: repeat(2, 1fr); }
+            .action-grid { grid-template-columns: 1fr; }
+            .page-wrap   { padding: 24px 16px 44px; }
+        }
+
+        @media (max-width: 380px) {
+            .stats-row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top navbar -->
+    <nav class="navbar navbar-expand-md top-nav">
+        <div class="container-fluid px-0">
+
+            <a class="navbar-brand" href="/admin/dashboard">
+                <div class="logo-mark">CA</div>
+                <span class="brand-label">Crocodile Analytics</span>
+            </a>
+
+            <button class="navbar-toggler" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#navMenu"
+                    aria-controls="navMenu" aria-expanded="false">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navMenu">
+                <ul class="navbar-nav me-auto gap-1">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/admin/dashboard">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/teams">Teams</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/players">Players</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/matches">Matches</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/statistics">Statistics</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/api-info">API</a>
+                    </li>
+                </ul>
+                <a href="/logout" class="btn-nav-logout ms-2">Logout</a>
+            </div>
+
+        </div>
+    </nav>
+
+    <!-- Page content -->
+    <div class="page-wrap">
+
+        <div class="page-header">
+            <h1 class="page-title">Admin Dashboard</h1>
+            <p class="page-sub">Welcome back, {{ session['user'] }}. Manage the system below.</p>
+        </div>
+
+        <!-- Stat cards -->
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-label">Total Players</div>
+                <div class="stat-value">{{ total_players }}</div>
+                <div class="stat-hint">registered in system</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Total Teams</div>
+                <div class="stat-value">{{ total_teams }}</div>
+                <div class="stat-hint">active teams</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Total Matches</div>
+                <div class="stat-value">{{ total_matches }}</div>
+                <div class="stat-hint">scheduled matches</div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

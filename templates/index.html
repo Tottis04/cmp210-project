@@ -1,5 +1,85 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crocodile Analytics</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-{% block content %}
-<h1>Welcome to the App</h1>
-{% endblock %}
+        body {
+            background: #1c1f28;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: system-ui, -apple-system, sans-serif;
+            color: #d0d5df;
+        }
+
+        .landing-box {
+            text-align: center;
+            padding: 24px 16px;
+            max-width: 440px;
+            width: 100%;
+        }
+
+        .logo-mark {
+            width: 48px;
+            height: 48px;
+            background: #4a7cf7;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 15px;
+            color: #fff;
+            margin: 0 auto 28px;
+        }
+
+        .landing-title {
+            font-size: 26px;
+            font-weight: 700;
+            color: #e2e6ef;
+            margin-bottom: 10px;
+            line-height: 1.2;
+        }
+
+        .landing-sub {
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 36px;
+        }
+
+        .btn-login {
+            display: inline-block;
+            padding: 11px 36px;
+            background: #4a7cf7;
+            color: #fff;
+            border-radius: 7px;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background .15s;
+        }
+
+        .btn-login:hover { background: #3a6ce0; color: #fff; text-decoration: none; }
+
+        @media (max-width: 400px) {
+            .landing-title { font-size: 22px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="landing-box">
+        <div class="logo-mark">CA</div>
+        <h1 class="landing-title">Welcome to Crocodile Analytics</h1>
+        <p class="landing-sub">Sports Analytics &amp; Match Tracking System</p>
+        <a href="/login" class="btn-login">Login</a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

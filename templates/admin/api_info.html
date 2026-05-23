@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Endpoints — Crocodile Analytics</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg:      #1c1f28;
+            --nav-bg:  #191c23;
+            --surface: #242830;
+            --border:  #2e3340;
+            --accent:  #4a7cf7;
+            --text:    #d0d5df;
+            --muted:   #6b7280;
+            --green:   #3a8a5a;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--bg); color: var(--text);
+            font-family: system-ui, -apple-system, sans-serif;
+            min-height: 100vh; padding-top: 54px;
+        }
+
+        .top-nav {
+            background: var(--nav-bg) !important;
+            border-bottom: 1px solid var(--border);
+            min-height: 54px; padding: 0 20px;
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+        }
+
+        .top-nav .navbar-brand {
+            display: flex; align-items: center; gap: 9px;
+            padding: 0; margin-right: 24px; text-decoration: none;
+        }
+
+        .logo-mark {
+            width: 30px; height: 30px; background: var(--accent);
+            border-radius: 6px; display: flex; align-items: center;
+            justify-content: center; font-weight: 700; font-size: 12px;
+            color: #fff; flex-shrink: 0;
+        }
+
+        .brand-label { font-size: 13px; font-weight: 600; color: #e2e6ef; }
+
+        .top-nav .nav-link {
+            color: #7d8699 !important; font-size: 13px;
+            padding: 6px 10px !important; border-radius: 5px;
+            transition: color .12s, background .12s; white-space: nowrap;
+        }
+
+        .top-nav .nav-link:hover { color: var(--text) !important; background: rgba(255,255,255,.04); }
+        .top-nav .nav-link.active { color: #c6d4ff !important; background: rgba(74,124,247,.10); }
+
+        .btn-nav-logout {
+            font-size: 13px; font-family: inherit; color: var(--muted);
+            background: transparent; border: 1px solid var(--border);
+            border-radius: 6px; padding: 5px 13px; text-decoration: none;
+            white-space: nowrap; transition: color .12s, border-color .12s;
+        }
+
+        .btn-nav-logout:hover { color: #e57368; border-color: rgba(192,57,43,.4); text-decoration: none; }
+        .navbar-toggler { border-color: var(--border) !important; padding: 4px 9px; }
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+        }
+
+        @media (max-width: 767px) {
+            .top-nav .navbar-collapse {
+                background: var(--nav-bg); border-top: 1px solid var(--border);
+                padding: 8px 0 12px; margin: 0 -20px; padding-left: 20px;
+            }
+            .top-nav .nav-link { border-radius: 0; }
+            .btn-nav-logout { margin: 8px 0 0 0; display: inline-block; }
+        }
+
+        .page-wrap { max-width: 860px; margin: 0 auto; padding: 32px 24px 56px; }
+
+        .page-title { font-size: 20px; font-weight: 700; color: #e2e6ef; margin-bottom: 4px; }
+        .page-sub   { font-size: 13px; color: var(--muted); margin-bottom: 28px; }
+
+        /* ── Endpoint cards ── */
+        .endpoint-list { display: flex; flex-direction: column; gap: 10px; }
+
+        .endpoint-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            box-shadow: 0 1px 6px rgba(0,0,0,.25);
+        }
+
+        .method-badge {
+            flex-shrink: 0;
+            padding: 3px 10px;
+            border-radius: 5px;
+            font-size: 11px;
+            font-weight: 700;
+            font-family: monospace;
+            letter-spacing: .5px;
+            background: rgba(58,138,90,.15);
+            border: 1px solid rgba(58,138,90,.25);
+            color: #5dbe85;
+            margin-top: 2px;
+        }
+
+        .endpoint-info { flex: 1; min-width: 0; }
+
+        .endpoint-path {
+            font-family: monospace;
+            font-size: 14px;
+            color: #a8c0ff;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .endpoint-desc {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .endpoint-link {
+            flex-shrink: 0;
+            font-size: 12px;
+            color: var(--accent);
+            text-decoration: none;
+            white-space: nowrap;
+            margin-top: 2px;
+            transition: color .12s;
+        }
+
+        .endpoint-link:hover { color: #a0bcff; }
+
+        @media (max-width: 560px) {
+            .page-wrap { padding: 24px 16px 44px; }
+            .endpoint-link { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-md top-nav">
+        <div class="container-fluid px-0">
+            <a class="navbar-brand" href="/admin/dashboard">
+                <div class="logo-mark">CA</div>
+                <span class="brand-label">Crocodile Analytics</span>
+            </a>
+            <button class="navbar-toggler" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#navMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navMenu">
+                <ul class="navbar-nav me-auto gap-1">
+                    <li class="nav-item"><a class="nav-link" href="/admin/dashboard">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/teams">Teams</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/players">Players</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/matches">Matches</a></li>
+
+                    <li class="nav-item"><a class="nav-link" href="/statistics">Statistics</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/api-info">API</a></li>
+                </ul>
+                <a href="/logout" class="btn-nav-logout ms-2">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="page-wrap">
+        <h1 class="page-title">API Endpoints</h1>
+        <p class="page-sub">Available JSON endpoints for this system. All return JSON.</p>
+
+        <div class="endpoint-list">
+
+            <div class="endpoint-card">
+                <span class="method-badge">GET</span>
+                <div class="endpoint-info">
+                    <div class="endpoint-path">/api/players</div>
+                    <div class="endpoint-desc">Returns a list of all players with id, name, age, team and position.</div>
+                </div>
+                <a href="/api/players" target="_blank" class="endpoint-link">Try it →</a>
+            </div>
+
+            <div class="endpoint-card">
+                <span class="method-badge">GET</span>
+                <div class="endpoint-info">
+                    <div class="endpoint-path">/api/users</div>
+                    <div class="endpoint-desc">Returns a list of all users with id, username and role.</div>
+                </div>
+                <a href="/api/users" target="_blank" class="endpoint-link">Try it →</a>
+            </div>
+
+            <div class="endpoint-card">
+                <span class="method-badge">GET</span>
+                <div class="endpoint-info">
+                    <div class="endpoint-path">/api/reports/player-count</div>
+                    <div class="endpoint-desc">Returns the total number of players registered in the system.</div>
+                </div>
+                <a href="/api/reports/player-count" target="_blank" class="endpoint-link">Try it →</a>
+            </div>
+
+            <div class="endpoint-card">
+                <span class="method-badge">GET</span>
+                <div class="endpoint-info">
+                    <div class="endpoint-path">/api/oldest-player</div>
+                    <div class="endpoint-desc">Returns the player with the highest age value in the database.</div>
+                </div>
+                <a href="/api/oldest-player" target="_blank" class="endpoint-link">Try it →</a>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

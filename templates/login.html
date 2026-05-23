@@ -1,12 +1,180 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login — Crocodile Analytics</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-{% block content %}
-<h2>Login</h2>
+        body {
+            height: 100vh;
+            display: flex;
+            font-family: system-ui, -apple-system, sans-serif;
+            color: #d0d5df;
+            overflow: hidden;
+            background: url("{{ url_for('static', filename='images/Artboard 1.png') }}")
+                        center / cover no-repeat;
+        }
 
-<form method="POST">
-    <input type="text" name="username" placeholder="Username"><br><br>
-    <input type="password" name="password" placeholder="Password"><br><br>
-    <button type="submit">Login</button>
-</form>
+        /* Left side — transparent, shows the sports/photo portion of the image */
+        .panel-left {
+            flex: 0 0 55%;
+        }
 
-{% endblock %}
+        /* Right side — transparent, shows the blue portion of the image */
+        .panel-right {
+            flex: 0 0 45%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 48px 44px;
+        }
+
+        /* No card — form floats directly on the image */
+        .login-card {
+            width: 100%;
+            max-width: 340px;
+        }
+
+        /* Logo mark */
+        .logo-mark {
+            width: 44px;
+            height: 44px;
+            background: #4a7cf7;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+            color: #fff;
+            margin-bottom: 28px;
+        }
+
+        .login-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 5px;
+        }
+
+        .login-subtitle {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.65);
+            margin-bottom: 36px;
+        }
+
+        /* Fields */
+        .field { margin-bottom: 18px; }
+
+        .field-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: .6px;
+            margin-bottom: 7px;
+        }
+
+        .field-input {
+            width: 100%;
+            background: #ffffff;
+            border: 1px solid #2d323c;
+            border-radius: 7px;
+            color: #000000;
+            font-size: 14px;
+            font-family: inherit;
+            padding: 10px 13px;
+            outline: none;
+            transition: border-color .15s, box-shadow .15s;
+        }
+
+        .field-input::placeholder { color: #3a4050; }
+
+        .field-input:focus {
+            border-color: #4a7cf7;
+            box-shadow: 0 0 0 3px rgba(74, 124, 247, .12);
+        }
+
+        /* Submit button */
+        .btn-login {
+            width: 100%;
+            background: #9d1433;
+            color: #fff;
+            border: none;
+            border-radius: 7px;
+            padding: 11px;
+            font-size: 14px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: background .15s;
+            margin-top: 6px;
+        }
+
+        .btn-login:hover  { background: #3a6ce0; }
+        .btn-login:active { background: #2f5cc8; }
+
+        /* ── Responsive ── */
+        @media (max-width: 768px) {
+            body {
+                height: auto;
+                overflow: auto;
+                align-items: center;
+                justify-content: center;
+                min-height: 100vh;
+            }
+
+            .panel-left  { display: none; }
+
+            .panel-right {
+                flex: none;
+                width: 100%;
+                padding: 48px 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Left: sports image side (transparent — background shows through) -->
+    <div class="panel-left"></div>
+
+    <!-- Right: blue image side with login card on top -->
+    <div class="panel-right">
+        <div class="login-card">
+
+            <div class="logo-mark">CA</div>
+
+            <h1 class="login-title">Crocodile Analytics</h1>
+            <p class="login-subtitle">Sign in to your account</p>
+
+            <form method="POST">
+
+                <div class="field">
+                    <label class="field-label" for="username">Username</label>
+                    <input class="field-input" type="text" id="username"
+                           name="username" placeholder="Enter username"
+                           autocomplete="username" required>
+                </div>
+
+                <div class="field">
+                    <label class="field-label" for="password">Password</label>
+                    <input class="field-input" type="password" id="password"
+                           name="password" placeholder="Enter password"
+                           autocomplete="current-password" required>
+                </div>
+
+                <button type="submit" class="btn-login">Login</button>
+
+            </form>
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

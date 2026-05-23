@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard — Crocodile Analytics</title>
+    <title>Statistics — Crocodile Analytics</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         :root {
@@ -82,13 +82,13 @@
 
         .page-wrap { max-width: 1160px; margin: 0 auto; padding: 32px 24px 56px; }
 
-        .page-header { margin-bottom: 24px; }
-        .page-title  { font-size: 20px; font-weight: 700; color: #e2e6ef; margin-bottom: 3px; }
-        .page-sub    { font-size: 13px; color: var(--muted); }
+        .page-hdr { margin-bottom: 28px; }
+        .page-title { font-size: 20px; font-weight: 700; color: #e2e6ef; margin-bottom: 3px; }
+        .page-sub   { font-size: 13px; color: var(--muted); }
 
         .stats-row {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 14px;
             margin-bottom: 32px;
         }
@@ -100,17 +100,47 @@
             padding: 18px 20px;
         }
 
-        .stat-label {
-            font-size: 11px; font-weight: 600;
-            text-transform: uppercase; letter-spacing: .6px;
-            color: var(--muted); margin-bottom: 10px;
-        }
-
+        .stat-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .6px; color: var(--muted); margin-bottom: 10px; }
         .stat-value { font-size: 28px; font-weight: 700; color: #e2e6ef; line-height: 1; }
         .stat-hint  { font-size: 11px; color: #4a5265; margin-top: 5px; }
 
-        @media (max-width: 576px) {
-            .stats-row { grid-template-columns: repeat(2, 1fr); }
+        .section-hdr { margin-bottom: 14px; }
+        .section-title { font-size: 14px; font-weight: 600; color: #e2e6ef; }
+        .section-sub   { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+        .table-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 9px; overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,.3);
+            margin-bottom: 32px;
+        }
+
+        .data-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+
+        .data-table thead th {
+            background: #1e2230; border-bottom: 1px solid var(--border);
+            color: var(--muted); font-size: 11px; font-weight: 600;
+            text-transform: uppercase; letter-spacing: .6px;
+            padding: 13px 16px; text-align: left;
+        }
+
+        .data-table tbody td {
+            padding: 13px 16px; border-bottom: 1px solid var(--border);
+            vertical-align: middle; color: var(--text);
+        }
+
+        .data-table tbody tr:last-child td { border-bottom: none; }
+        .data-table tbody tr:hover td { background: rgba(255,255,255,.025); }
+
+        .cell-name { font-weight: 500; color: #e2e6ef; }
+
+        .empty-row td { text-align: center; color: var(--muted); font-size: 13px; padding: 32px 16px !important; }
+
+        @media (max-width: 900px) { .stats-row { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 600px) {
+            .data-table { font-size: 13px; }
+            .data-table thead th, .data-table tbody td { padding: 10px 12px; }
             .page-wrap { padding: 24px 16px 44px; }
         }
     </style>
@@ -129,10 +159,10 @@
             </button>
             <div class="collapse navbar-collapse" id="navMenu">
                 <ul class="navbar-nav me-auto gap-1">
-                    <li class="nav-item"><a class="nav-link active" href="/user/dashboard">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/user/dashboard">Dashboard</a></li>
                     <li class="nav-item"><a class="nav-link" href="/user/players">Players</a></li>
                     <li class="nav-item"><a class="nav-link" href="/user/teams">Teams</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/user/statistics">Statistics</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/user/statistics">Statistics</a></li>
                 </ul>
                 <a href="/logout" class="btn-nav-logout ms-2">Logout</a>
             </div>
@@ -141,27 +171,96 @@
 
     <div class="page-wrap">
 
-        <div class="page-header">
-            <h1 class="page-title">Dashboard</h1>
-            <p class="page-sub">Welcome back, {{ session['user'] }}.</p>
+        <div class="page-hdr">
+            <h1 class="page-title">Statistics</h1>
+            <p class="page-sub">Match and player performance analytics.</p>
         </div>
 
         <div class="stats-row">
             <div class="stat-card">
                 <div class="stat-label">Total Players</div>
                 <div class="stat-value">{{ total_players }}</div>
-                <div class="stat-hint">registered in system</div>
+                <div class="stat-hint">registered</div>
             </div>
             <div class="stat-card">
                 <div class="stat-label">Total Teams</div>
                 <div class="stat-value">{{ total_teams }}</div>
-                <div class="stat-hint">active teams</div>
+                <div class="stat-hint">active</div>
             </div>
             <div class="stat-card">
                 <div class="stat-label">Total Matches</div>
                 <div class="stat-value">{{ total_matches }}</div>
-                <div class="stat-hint">recorded matches</div>
+                <div class="stat-hint">recorded</div>
             </div>
+            <div class="stat-card">
+                <div class="stat-label">Avg Player Age</div>
+                <div class="stat-value">{{ avg_age }}</div>
+                <div class="stat-hint">years old</div>
+            </div>
+        </div>
+
+        <div class="section-hdr">
+            <div class="section-title">Player Overview</div>
+            <div class="section-sub">All registered players sorted by age.</div>
+        </div>
+
+        <div class="table-card">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Team</th>
+                        <th>Position</th>
+                        <th>Age</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if players %}
+                        {% for p in players %}
+                        <tr>
+                            <td class="cell-name">{{ p[0] }}</td>
+                            <td>{{ p[1] }}</td>
+                            <td>{{ p[2] }}</td>
+                            <td>{{ p[3] }}</td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr class="empty-row"><td colspan="4">No players in the database yet.</td></tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section-hdr">
+            <div class="section-title">Recent Matches</div>
+            <div class="section-sub">Last 10 matches ordered by date.</div>
+        </div>
+
+        <div class="table-card">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Home Team</th>
+                        <th>Away Team</th>
+                        <th>Date</th>
+                        <th>Stadium</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if matches %}
+                        {% for m in matches %}
+                        <tr>
+                            <td class="cell-name">{{ m[0] }}</td>
+                            <td class="cell-name">{{ m[1] }}</td>
+                            <td>{{ m[2] }}</td>
+                            <td>{{ m[3] }}</td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr class="empty-row"><td colspan="4">No matches recorded yet.</td></tr>
+                    {% endif %}
+                </tbody>
+            </table>
         </div>
 
     </div>
