@@ -112,8 +112,8 @@ Some challenges during development included:
 This project helped us improve understanding of Flask, MySQL, authentication systems, and web application development while creating a simple football analytics platform.
 
 
-Panagiotis Panagiotou
-Panagiotis Theodorou
-vasilis xatziantonis
-Panagiotis Nikolaou
+-Panagiotis Panagiotou
+-Panagiotis Theodorou
+-Vasilis Xatziantonis
+-Panagiotis Nikolaou
 
