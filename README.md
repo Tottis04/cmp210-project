@@ -13,8 +13,6 @@ Crocodile Analytics is a football web application developed with Flask and MySQL
 - MySQL
 - HTML
 - CSS
-- Bootstrap
-- Git & GitHub
 
 ---
 
@@ -111,4 +109,11 @@ Some challenges during development included:
 
 ## Conclusion
 
-This project helped improve understanding of Flask, MySQL, authentication systems, and web application development while creating a simple football analytics platform.
+This project helped us improve understanding of Flask, MySQL, authentication systems, and web application development while creating a simple football analytics platform.
+
+
+Panagiotis Panagiotou
+Panagiotis Theodorou
+vasilis xatziantonis
+Panagiotis Nikolaou
+
